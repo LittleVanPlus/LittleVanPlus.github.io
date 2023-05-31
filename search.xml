@@ -10,11 +10,111 @@
   <entry>
     <title>InfiniBand</title>
     <url>/2023/05/31/16-35-07/</url>
-    <content><![CDATA[]]></content>
+    <content><![CDATA[<h1 id="InfiniBand是什么"><a href="#InfiniBand是什么" class="headerlink" title="InfiniBand是什么"></a>InfiniBand是什么</h1><p>InfiniBand（简称IB）是一种工业标准规范，它定义了一种输入&#x2F;输出架构，用于计算节点、通信基础设施设备、存储和嵌入式系统的互连。操作系统可以是Linux、Windows或ESXI。</p>
+<p>IB协议于2000年由IBTA（InfiniBandTrade Association）提出，其规定了一整套完整的链路层到传输层（非传统OSI七层模型的传输层，而是位于其之上）规范，但是其无法兼容现有以太网。企业如果想部署，还要重新购买IB网卡和配套的交换设备。IB是一种专为RDMA设计的网络，从硬件级别保证可靠传输</p>
+<p>InfiniBand采用的是一种基于信用的流量控制系统。即在接收对象未保证充足的缓冲之前，不会发送数据。这样，就使得InfiniBand 成为像无损光纤通道网络架构那样的光纤通道 。</p>
+<p>其次，InfiniBand 支持RDMA，具备在完全卸载CPU和操作系统的方式下，在两个远程系统的存储区域移动数据的能力。作为原始总线设计遗留下来的的理念，如要对分布式系统进行扩展 ，RDMA是关键。有RDMA的InfiniBand具备多种关键优势。</p>
+<p>InfiniBand的物理信号技术一直超前于其他网络技术，使得它都具备比其他任何网络协议都大的带宽 。InfiniBand这一名称本身即说明了其无限的带宽发展前景。InfiniBand路线图设计 的目的就是要保证单个链路的带宽 能够保持在大于PCIExpress(PCIe)总线数据速率(这是服务器内部总线标准)的水平。</p>
+<p><strong>一言以蔽之</strong>，InfiniBand架构的核心就是<strong>把I&#x2F;O子系统从服务器主机中剥离出去，通过光纤介质，采用基于交换的端到端的传输模式连接它</strong></p>
+<p>Infiniband大量用于FC&#x2F;IP、SAN 、NAS 和服务器之间的连接， 作为iSCSI RDMA的存储协议iSER已被IETF标准化。</p>
+<p>目前EMC全系产品已经切换到Infiniband组网，IBM&#x2F;TMS的FlashSystem系列，IBM的存储系统XIV Gen3，DDN的SFA系列都采用Infiniband网络。</p>
+<p>相比FC的优势主要体现在性能是FC的3.5倍，Infiniband交换机的延迟是FC交换机的1&#x2F;10，支持SAN和NAS。</p>
+<p>存储系统已不能满足于传统的FC， SAN所提供的服务器与裸存储的网络连接架构</p>
+<p>HP SFS和IBM GPFS 是在Infiniband fabric连接起来的服务器和iSER Infiniband存储构建的并行文件系统，完全突破系统的性能瓶颈。</p>
+<p>Infiniband采用PCI串行高速带宽链接 ，从SDR、DDR、QDR、FDR到EDRHCA连接，可以做到1微妙、甚至纳米级别极低的时延，基于链路层的流控机制实现先进的拥塞控制。</p>
+<h2 id="IB网络的结构"><a href="#IB网络的结构" class="headerlink" title="IB网络的结构"></a>IB网络的结构</h2><p><img src="https://i.postimg.cc/vTWP9y10/image.png" alt="结构图"></p>
+<p>InfiniBand规范定义了3个基本组件：</p>
+<ul>
+<li>一个主机信道适配器(HCA)</li>
+<li>一个目标信道适配器(TCA)</li>
+<li>一个网络交换机</li>
+</ul>
+<p>HCA 驻留在处理器节点 并提供从系统内存 到InfiniBand网络的通路。它也有一个可编程的直接内存访问（DMA）引擎 。</p>
+<p>该引擎具有特殊保护 和地址翻译特性，从而使DMA操作可以本地进行或者通过另一个HCA或TCA远程进行。</p>
+<p>TCA 驻留在I&#x2F;O单元 ，并提供I&#x2F;O设备（如一个磁盘驱动器 ）或I&#x2F;O网络（如以太网或光纤通道 ）与InfiniBand网络的连接 </p>
+<p>它实现了InfiniBand协议的<strong>物理层</strong>、<strong>链接层</strong>和<strong>传输层</strong> 。</p>
+<p>交换机放置在信道适配器之间 </p>
+<p>它们使几个甚至几千个InfiniBand叶节点 可以在任意位置互连进一个单一网络 ，该网络同时支持多个连接 。</p>
+<h2 id="IB网络相比于TCP-x2F-IP的优势"><a href="#IB网络相比于TCP-x2F-IP的优势" class="headerlink" title="IB网络相比于TCP&#x2F;IP的优势"></a>IB网络相比于TCP&#x2F;IP的优势</h2><p>相比TCP&#x2F;IP网络协议，IB使用基于信任的、流控制的机制来确保连接的完整性，数据包极少丢失</p>
+<p>接受方在数据传输完毕之后，返回信号来标示缓存空间的可用性</p>
+<p>所以IB协议消除了由于原数据包丢失而带来的重传延迟，从而提升了效率和整体性能</p>
+<p>TCP&#x2F;IP由于要<strong>不断地确认与重传</strong>，基于这些协议的通信也会因此变慢，极大地影响了性能</p>
+<h1 id="InfiniBand的生态和相关组织"><a href="#InfiniBand的生态和相关组织" class="headerlink" title="InfiniBand的生态和相关组织"></a>InfiniBand的生态和相关组织</h1><h5 id="IBTA（InfiniBand-Trade-Association）"><a href="#IBTA（InfiniBand-Trade-Association）" class="headerlink" title="IBTA（InfiniBand Trade Association）"></a>IBTA（InfiniBand Trade Association）</h5><blockquote>
+<p>成立于1999年，负责制定和维护Infiniband协议标准。IBTA独立于各个厂商，通过赞助技术活动和推动资源共享来将整个行业整合在一起，积极推广IB和RoCE。IBTA会对商用的IB和RoCE设备进行协议标准符合性和互操作性测试及认证，由很多大型的IT厂商组成的委员会领导，其主要成员包括博通，HPE，IBM，英特尔，Mellanox和微软等</p>
+</blockquote>
+<h5 id="OFA（OpenFabrics-Alliance）"><a href="#OFA（OpenFabrics-Alliance）" class="headerlink" title="OFA（OpenFabrics Alliance）"></a>OFA（OpenFabrics Alliance）</h5><blockquote>
+<p>成立于2004年的非盈利组织，负责开发、测试、认证、支持和分发独立于厂商的开源跨平台infiniband协议栈，2010年开始支持RoCE。其对用于支撑RDMA&#x2F;Kernel bypass应用的OFED（OpenFabrics Enterprise Distribution）软件栈负责，保证其与主流软硬件的兼容性和易用性。OFED软件栈包括驱动、内核、中间件和API</p>
+</blockquote>
+<blockquote>
+<p>IBTA主要负责开发、维护和增强Infiniband协议标准；OFA负责开发和维护Infiniband协议和上层应用API</p>
+</blockquote>
+<h1 id="InfiniBand网络厂商"><a href="#InfiniBand网络厂商" class="headerlink" title="InfiniBand网络厂商"></a>InfiniBand网络厂商</h1><p>InfiniBand Trade Association (IBTA)的9个主要董事成员中只有Mellanox和Emulex专门在做InfiniBand，其他成员只是扮演了使用InfiniBand的角色。</p>
+<p>而Emulex由于业务不景气也在2015年的2月被Avago收购，Avago后来又被博通收购，博通目前在推Jericho3-AI(基于Ethernet)</p>
+<blockquote>
+<p><a href="https://wallstreetcn.com/articles/3686881">https://wallstreetcn.com/articles/3686881</a></p>
+</blockquote>
+<p>Qlogic的infiniband业务在2012年也全部卖给Intel了，Intel基于此布局OPA，Intel后来主推的是Omni-Path</p>
+<blockquote>
+<p><a href="http://www.ssdfans.com/?p=8118">http://www.ssdfans.com/?p=8118</a></p>
+</blockquote>
+<p><strong>Nvidia (Mellanox)</strong></p>
+<p>Mellanox在IB市场一家独大，其产品的集群部署数量远远大于选择竞争对手的数量</p>
+<p>选择Mellanox产品的集群数量是选择竞争对手Omni-Path(英特尔)网络的近四倍，是另外一个竞争对手Cray系统的五倍。</p>
+<blockquote>
+<p>在2019年11月份，Mellanox发布了全球首个 200Gb&#x2F;s 数据中心网络互连解决方案</p>
+<p>Mellanox ConnectX-6 适配器、Quantum交换机、 LinkX线缆和收发器一同构成了面向新一代高性能计算、机器学习、大数据、云、web 2.0和存储平台的完整 200Gb&#x2F;s HDR InfiniBand 网络互连基础设施。</p>
+</blockquote>
+<h1 id="InfiniBand在超算中的使用"><a href="#InfiniBand在超算中的使用" class="headerlink" title="InfiniBand在超算中的使用"></a>InfiniBand在超算中的使用</h1><ul>
+<li>TOP100中61个系统使用Mellanox InfiniBand技术互连</li>
+<li>TOP500中14个基于GPU架构的系统，其中13个采用Mellanox InfiniBand技术互连</li>
+<li>TOP500最高的系统效率—96.3%的创造者采用了Mellanox InfiniBand技术互连</li>
+</ul>
+<h1 id="NVIDIAConnectXInfiniBand-网卡"><a href="#NVIDIAConnectXInfiniBand-网卡" class="headerlink" title="NVIDIAConnectXInfiniBand 网卡"></a>NVIDIAConnectXInfiniBand 网卡</h1><p>主要用于HPC，机器学习，高性能存储及数据库业务和低延迟嵌入式等应用</p>
+<ul>
+<li>ConnectX-7<ul>
+<li>超低时延、400Gb&#x2F;s吞吐量和在网计算加速引擎</li>
+</ul>
+</li>
+<li>ConnectX-6<ul>
+<li>目前NVIDIA主推的一款平台产品， 200Gb&#x2F;s吞吐量</li>
+</ul>
+</li>
+<li>ConnectX-5<ul>
+<li>支持双端口100Gb&#x2F;sInfiniBand和以太网网络连接、PCIeGen3 和 Gen4 服务器、极高的消息速率、内置PCIe交换和NVMeoverFabric卸载</li>
+</ul>
+</li>
+</ul>
+<h1 id="NVIDIAQuantumInfiniBandPlatform"><a href="#NVIDIAQuantumInfiniBandPlatform" class="headerlink" title="NVIDIAQuantumInfiniBandPlatform"></a>NVIDIAQuantumInfiniBandPlatform</h1><p>适用于科学计算，HPC，AI，云计算</p>
+<ul>
+<li>InfiniBand 网卡<ul>
+<li>提供In-Networkcomputingengines</li>
+</ul>
+</li>
+<li>BlueFieldDPU</li>
+<li>InfiniBand 交换机<ul>
+<li>SHARP(ScalableHierarchicalAggregationandReductionProtocol)</li>
+</ul>
+</li>
+<li>路由器和网关<ul>
+<li>Highscalabilityandsubnetisolation</li>
+</ul>
+</li>
+<li>Long-HaulSystems<ul>
+<li>可以伸展到40公里的距离，连接数据中心，以及数据中心与存储系统</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>Netlab组会</tag>
+      </tags>
   </entry>
   <entry>
     <title>RDMA</title>
     <url>/2023/05/31/16-35-26/</url>
     <content><![CDATA[]]></content>
+      <tags>
+        <tag>Network</tag>
+      </tags>
   </entry>
 </search>
